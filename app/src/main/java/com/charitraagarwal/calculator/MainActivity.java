@@ -16,18 +16,13 @@ public class MainActivity extends AppCompatActivity {
     Button oneBtn, twoBtn, threeBtn, addBtn;
     Button plusMinusBtn, zeroBtn, periodBtn, equalBtn;
 
+    int numberOfBracketsOpen = 0;
 
-    void appendString(String s) {
+
+    void appendStringToExpressionDisplay(String s) {
         // appends a string to the end of the current string in equation text view
         String oldText = expressionDisplay.getText().toString();
-        expressionDisplay.setText(oldText + s);
-    }
-
-    void backspaceBtnPressed() {
-        // delete last character from equation text view
-        String oldText = expressionDisplay.getText().toString();
-        if(oldText.length()==0) return;
-        String newText = oldText.substring(0, oldText.length()-1);
+        String newText = oldText + s;
         expressionDisplay.setText(newText);
     }
 
@@ -43,6 +38,31 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
+
+    ////////////////////////// button press calls ///////////////////////
+
+    void clearBtnPressed() {
+        // reset the calculator
+        expressionDisplay.setText("");
+        numberOfBracketsOpen = 0;
+    }
+
+    void backspaceBtnPressed() {
+        // delete last character from equation text view
+        String oldText = expressionDisplay.getText().toString();
+        if(oldText.length()==0) return;
+
+        // manage bracket count on delete
+        char lastChar = oldText.charAt(oldText.length()-1);
+        if(lastChar == ')')
+            numberOfBracketsOpen++;
+        if(lastChar == '(')
+            numberOfBracketsOpen--;
+
+        String newText = oldText.substring(0, oldText.length()-1);
+        expressionDisplay.setText(newText);
+    }
+
     void operatorBtnPressed(String operator) {
         // called when an operator button is pressed
         String oldText = expressionDisplay.getText().toString();
@@ -50,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
         // replace current operator if present
         if(isOperatorAtEnd(oldText)) backspaceBtnPressed();
-        appendString(operator);
+        appendStringToExpressionDisplay(operator);
     }
 
     void equalBtnPressed() {
@@ -59,7 +79,41 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void bracketBtnPressed(){
-        Toast.makeText(getApplicationContext(), "Bracket", Toast.LENGTH_LONG).show();
+        String oldText = expressionDisplay.getText().toString();
+        int strLength = oldText.length();
+
+        if(strLength == 0) {
+            appendStringToExpressionDisplay("(");
+            numberOfBracketsOpen++;
+            return;
+        }
+
+        char lastChar = oldText.charAt(oldText.length()-1);
+
+        if(Character.isDigit(lastChar)) {
+            if(numberOfBracketsOpen!=0) {
+                appendStringToExpressionDisplay(")");
+                numberOfBracketsOpen--;
+            } else {
+                appendStringToExpressionDisplay("×(");
+                numberOfBracketsOpen++;
+            }
+        }
+        else if(lastChar == ')') {
+            if(numberOfBracketsOpen == 0) {
+                appendStringToExpressionDisplay("×(");
+                numberOfBracketsOpen++;
+            } else {
+                appendStringToExpressionDisplay(")");
+                numberOfBracketsOpen--;
+            }
+
+        }
+        else{
+            appendStringToExpressionDisplay("(");
+            numberOfBracketsOpen++;
+        }
+        Toast.makeText(this, Integer.toString(numberOfBracketsOpen), Toast.LENGTH_SHORT).show();
     }
 
     void plusMinusBtnPressed(){
@@ -103,23 +157,23 @@ public class MainActivity extends AppCompatActivity {
         equalBtn =  (Button)findViewById(R.id.equalBtn);
 
 
-        clearBtn.setOnClickListener(v -> expressionDisplay.setText(""));
+        clearBtn.setOnClickListener(v -> clearBtnPressed());
         backspaceBtn.setOnClickListener(v -> backspaceBtnPressed());
 
-        oneBtn.setOnClickListener(v -> appendString("1"));
-        twoBtn.setOnClickListener(v -> appendString("2"));
-        threeBtn.setOnClickListener(v -> appendString("3"));
-        fourBtn.setOnClickListener(v -> appendString("4"));
-        fiveBtn.setOnClickListener(v -> appendString("5"));
-        sixBtn.setOnClickListener(v -> appendString("6"));
-        sevenBtn.setOnClickListener(v -> appendString("7"));
-        eightBtn.setOnClickListener(v -> appendString("8"));
-        nineBtn.setOnClickListener(v -> appendString("9"));
-        zeroBtn.setOnClickListener(v -> appendString("0"));
-        addBtn.setOnClickListener(v -> appendString("+"));
-        subtractBtn.setOnClickListener(v -> appendString("-"));
-        multiplyBtn.setOnClickListener(v -> appendString("×"));
-        divisionBtn.setOnClickListener(v -> appendString("÷"));
+        oneBtn.setOnClickListener(v -> appendStringToExpressionDisplay("1"));
+        twoBtn.setOnClickListener(v -> appendStringToExpressionDisplay("2"));
+        threeBtn.setOnClickListener(v -> appendStringToExpressionDisplay("3"));
+        fourBtn.setOnClickListener(v -> appendStringToExpressionDisplay("4"));
+        fiveBtn.setOnClickListener(v -> appendStringToExpressionDisplay("5"));
+        sixBtn.setOnClickListener(v -> appendStringToExpressionDisplay("6"));
+        sevenBtn.setOnClickListener(v -> appendStringToExpressionDisplay("7"));
+        eightBtn.setOnClickListener(v -> appendStringToExpressionDisplay("8"));
+        nineBtn.setOnClickListener(v -> appendStringToExpressionDisplay("9"));
+        zeroBtn.setOnClickListener(v -> appendStringToExpressionDisplay("0"));
+        addBtn.setOnClickListener(v -> appendStringToExpressionDisplay("+"));
+        subtractBtn.setOnClickListener(v -> appendStringToExpressionDisplay("-"));
+        multiplyBtn.setOnClickListener(v -> appendStringToExpressionDisplay("×"));
+        divisionBtn.setOnClickListener(v -> appendStringToExpressionDisplay("÷"));
 
         addBtn.setOnClickListener(v -> operatorBtnPressed("+"));
         subtractBtn.setOnClickListener(v -> operatorBtnPressed("-"));
