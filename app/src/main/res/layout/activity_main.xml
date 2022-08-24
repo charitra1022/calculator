@@ -29,6 +29,19 @@
             android:textSize="60sp"
             android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/resultDisplay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20sp"
+            android:fontFamily="monospace"
+            android:gravity="end"
+            android:paddingLeft="10sp"
+            android:paddingRight="10sp"
+            android:textIsSelectable="true"
+            android:textSize="50sp"
+            android:textStyle="bold" />
+
         <LinearLayout
             android:id="@+id/buttonLayout"
             android:layout_width="match_parent"
