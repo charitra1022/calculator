@@ -72,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
         String oldText = expressionDisplay.getText().toString();
         if(oldText.isEmpty()) return;
 
+        if((oldText.charAt(oldText.length()-1)) == '(') return;
+
         // replace current operator if present
         if(isOperatorAtEnd(oldText)) backspaceBtnPressed();
         appendStringToExpressionDisplay(operator);
