@@ -37,7 +37,8 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     // https://github.com/uklimaschewski/EvalEx :- EvalEx for evaluation
-    implementation 'com.udojava:EvalEx:2.7'
+    // implementation 'com.udojava:EvalEx:2.7'
+    implementation 'com.ezylang:EvalEx:3.0.0'
 
     // mXParser:- https://github.com/mariuszgromada/MathParser.org-mXparser
     // implementation 'org.mariuszgromada.math:MathParser.org-mXparser:5.0.7'
