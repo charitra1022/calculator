@@ -79,11 +79,11 @@ public class MainActivity extends AppCompatActivity {
         appendStringToExpressionDisplay(operator);
     }
 
-    void equalBtnPressed() {
-        // Evaluates value of the expression using mXparser library
+    String evaluateAnswer() {
+        // Evaluates value of the expression using mXparser/EvalEx library
 
         String text = expressionDisplay.getText().toString();
-        if(text.isEmpty()) return;  // empty expression check
+        if(text.isEmpty()) return "";  // empty expression check
         String equation = text.replace("×", "*").replace("÷", "/");
 
         Double result;
@@ -91,24 +91,33 @@ public class MainActivity extends AppCompatActivity {
 
         try{
             result = new Expression(equation).eval().doubleValue();   // evaluate expression using evalex
-        } catch (Exception e){
-            Toast.makeText(this, "Incorrect Expression", Toast.LENGTH_SHORT).show();
-            return;
+        }
+        catch (Exception e) {
+            return "invalid";
         }
 
+
         // NaN check at incorrect expression in case of mXparser
-        if(result.isNaN()){
-            Toast.makeText(this, "Incorrect Expression", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        if(result.isNaN()) return "invalid";
+
 
         // Convert result to string
         String resultText;
         if(result == result.intValue())
-            resultText = "=" + Integer.toString(result.intValue()); // remove unnecessary .0
+            resultText = Integer.toString(result.intValue()); // remove unnecessary .0
         else
-            resultText = "=" + Double.toString(result);
-        resultDisplay.setText(resultText);  // update result
+            resultText = Double.toString(result);
+
+        return resultText;
+    }
+
+    void equalBtnPressed(){
+        // called when equal button is pressed
+        String result = evaluateAnswer();
+        if (result.equals("invalid"))
+            Toast.makeText(this, "Incorrect Expression", Toast.LENGTH_SHORT).show();
+        else
+            expressionDisplay.setText(evaluateAnswer());
     }
 
     void bracketBtnPressed(){
