@@ -1,13 +1,15 @@
 package com.charitraagarwal.calculator;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.udojava.evalex.Expression;   // EvalEx
+//import com.udojava.evalex.Expression;   // EvalEx
+import com.ezylang.evalex.Expression;   // EvalEx 3.0
 //import org.mariuszgromada.math.mxparser.*; // mXparser
 
 
@@ -86,29 +88,35 @@ public class MainActivity extends AppCompatActivity {
         if(text.isEmpty()) return "";  // empty expression check
         String equation = text.replace("×", "*").replace("÷", "/");
 
-        Double result;
+        // Double result;
         // Double result = new Expression(equation).calculate();   // evaluate expression using mXparser
 
+        String result;
+
         try{
-            result = new Expression(equation).eval().doubleValue();   // evaluate expression using evalex
+            result = new Expression(equation).evaluate().getStringValue();
+            Log.w(null, result);
+            // result = new Expression(equation).evaluate().getNumberValue().doubleValue();   // evaluate expression using evalex
         }
         catch (Exception e) {
+            Log.e(null, e.getMessage());
             return "invalid";
         }
 
+        return result;
 
         // NaN check at incorrect expression in case of mXparser
-        if(result.isNaN()) return "invalid";
+        // if(result.isNaN()) return "invalid";
 
 
         // Convert result to string
-        String resultText;
-        if(result == result.intValue())
-            resultText = Integer.toString(result.intValue()); // remove unnecessary .0
-        else
-            resultText = Double.toString(result);
+        // String resultText;
+        // if(result == result.intValue())
+        //     resultText = Integer.toString(result.intValue()); // remove unnecessary .0
+        // else
+        //     resultText = Double.toString(result);
 
-        return resultText;
+        // return resultText;
     }
 
     void equalBtnPressed(){
